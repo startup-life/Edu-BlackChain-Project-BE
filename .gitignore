@@ -1,0 +1,17 @@
+node_modules/
+
+*.log
+
+.DS_Store
+
+.env
+.env.*
+!.env.dev.example
+
+.idea/
+
+
+public/image/post/*
+public/image/profile/*
+!public/image/post/.gitkeep
+!public/image/profile/.gitkeep
