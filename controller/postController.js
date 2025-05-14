@@ -3,6 +3,7 @@ const {
     STATUS_CODE,
     STATUS_MESSAGE
 } = require('../util/constant/httpStatusCode');
+const { rewardUser } = require('../util/rewardService');
 
 /**
  * 게시글 작성
@@ -204,6 +205,42 @@ exports.softDeletePost = async (request, response, next) => {
             data: null
         });
     } catch (error) {
+        return next(error);
+    }
+};
+
+exports.rewardToken = async (request, response, next) => {
+    const { userid: userId } = request.headers;
+    const { address } = request.body;
+
+    if (!userId) {
+        return response.status(STATUS_CODE.BAD_REQUEST).json({
+            message: STATUS_MESSAGE.INVALID_USER_ID,
+            data: null
+        });
+    }
+
+    if (!address) {
+        return response.status(STATUS_CODE.BAD_REQUEST).json({
+            message: STATUS_MESSAGE.INVALID_WALLET_ADDRESS,
+            data: null
+        });
+    }
+
+    try {
+        const txHash = await rewardUser(address, 1);
+        if (txHash) {
+            return response.status(STATUS_CODE.OK).json({
+                message: STATUS_MESSAGE.GIVE_REWARD_SUCCESS,
+                data: {
+                    txHash
+                }
+            });
+        } else {
+            return response.status(500).json({ message: '토큰 보상 실패' });
+        }
+    } catch (error) {
+        console.error('보상 실패:', error);
         return next(error);
     }
 };
