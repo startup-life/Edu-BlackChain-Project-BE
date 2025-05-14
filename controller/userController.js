@@ -9,6 +9,7 @@ const {
     STATUS_CODE,
     STATUS_MESSAGE
 } = require('../util/constant/httpStatusCode.js');
+const { getRewardTokenBalance } = require('../util/rewardService');
 
 const SALT_ROUNDS = 10;
 
@@ -390,6 +391,32 @@ exports.checkNickname = async (request, response, next) => {
         const error = new Error(STATUS_MESSAGE.ALREADY_EXIST_EMAIL);
         error.status = STATUS_CODE.BAD_REQUEST;
         throw error;
+    } catch (error) {
+        return next(error);
+    }
+};
+
+exports.getRewardTokenBalance = async (request, response, next) => {
+    const { address } = request.query;
+
+    if (!address) {
+        return response.status(STATUS_CODE.BAD_REQUEST).json({
+            message: STATUS_MESSAGE.INVALID_WALLET_ADDRESS,
+            data: null
+        });
+    }
+
+    try {
+        const balance = await getRewardTokenBalance(address);
+
+        return response.status(STATUS_CODE.OK).json({
+            message: STATUS_MESSAGE.GET_BALANCE_SUCCESS,
+            data: {
+                address,
+                balance,
+                symbol: 'CTK'
+            }
+        });
     } catch (error) {
         return next(error);
     }

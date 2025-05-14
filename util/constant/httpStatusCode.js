@@ -78,7 +78,12 @@ const STATUS_MESSAGE = {
 
     FILE_UPLOAD_SUCCESS: 'file_upload_success',
 
-    INTERNAL_SERVER_ERROR: 'internal_server_error'
+    INTERNAL_SERVER_ERROR: 'internal_server_error',
+
+    /*================= Reward ================*/
+    INVALID_WALLET_ADDRESS: 'invalid_wallet_address',
+    GET_BALANCE_SUCCESS: 'get_balance_success',
+    GIVE_REWARD_SUCCESS: 'give_reward_success'
 };
 
 module.exports = {
